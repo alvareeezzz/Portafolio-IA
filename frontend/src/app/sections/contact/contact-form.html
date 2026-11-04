@@ -1,0 +1,53 @@
+@let t = i18n.t().contacto;
+@if (resultado() === 'ok') {
+  <div class="aviso exito" role="status">
+    <p>{{ t.exito }}</p>
+    <button type="button" class="btn primary" (click)="cerrar.emit()">{{ t.cerrar }}</button>
+  </div>
+} @else {
+  <form [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+    @let nombre = form.controls.nombre;
+    <div class="campo">
+      <label for="contacto-nombre">{{ t.nombre }}</label>
+      <!-- autofocus: al abrir el modal, el cursor empieza aquí -->
+      <input id="contacto-nombre" formControlName="nombre" type="text" autocomplete="name" autofocus
+             [attr.maxlength]="limites.MAX_NOMBRE"
+             [attr.aria-invalid]="!!error(nombre)" aria-describedby="contacto-nombre-error">
+      <small id="contacto-nombre-error" class="error">{{ error(nombre) }}</small>
+    </div>
+
+    @let email = form.controls.email;
+    <div class="campo">
+      <label for="contacto-email">{{ t.email }}</label>
+      <input id="contacto-email" formControlName="email" type="email" autocomplete="email"
+             [attr.maxlength]="limites.MAX_EMAIL"
+             [attr.aria-invalid]="!!error(email)" aria-describedby="contacto-email-error">
+      <small id="contacto-email-error" class="error">{{ error(email) }}</small>
+    </div>
+
+    @let mensaje = form.controls.mensaje;
+    <div class="campo">
+      <label for="contacto-mensaje">{{ t.mensaje }}</label>
+      <textarea id="contacto-mensaje" formControlName="mensaje" rows="5"
+                [attr.maxlength]="limites.MAX_MENSAJE"
+                [attr.aria-invalid]="!!error(mensaje)" aria-describedby="contacto-mensaje-error"></textarea>
+      <small id="contacto-mensaje-error" class="error">{{ error(mensaje) }}</small>
+    </div>
+
+    <!-- Campo trampa: invisible para personas (y lectores de pantalla), los bots lo rellenan -->
+    <div class="trampa" aria-hidden="true">
+      <label for="contacto-sitio">Sitio web</label>
+      <input id="contacto-sitio" formControlName="sitioWeb" type="text" tabindex="-1" autocomplete="off">
+    </div>
+
+    @if (resultado() === 'limite' || resultado() === 'error') {
+      <p class="aviso fallo" role="alert">
+        {{ resultado() === 'limite' ? t.errores.limite : t.errores.noEnviado(i18n.datos().contacto.email) }}
+      </p>
+    }
+
+    <button type="submit" class="btn primary" [disabled]="enviando()">
+      {{ enviando() ? t.enviando : t.enviar }}
+    </button>
+  </form>
+}

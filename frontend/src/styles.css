@@ -1,0 +1,192 @@
+/* Identidad: el portfolio como una conversación.
+   Papel frío + tinta, un acento cobalto para lo que se puede pulsar
+   y amarillo de rotulador solo para las preguntas del visitante. */
+:root {
+  --bg: #f4f5f8;          /* papel frío */
+  --surface: #ffffff;
+  --text: #171b26;        /* tinta */
+  --muted: #5a6072;
+  --accent: #2d3fe0;      /* cobalto: 6,6:1 sobre el fondo, 7,2:1 con texto blanco */
+  --on-accent: #ffffff;
+  --marker: #ffe45c;      /* rotulador: fondo de las preguntas, siempre con --on-marker encima */
+  --on-marker: #171b26;
+  --border: #dfe2ea;
+  --error: #b42318;
+
+  --font: 'Schibsted Grotesk Variable', system-ui, sans-serif;
+  --nav-h: 60px;
+  --ancho: 1040px;
+  --col-titulo: 13rem;    /* columna izquierda con el título de cada sección */
+  color-scheme: light;
+}
+/* Tema oscuro: el del sistema si el usuario no ha elegido (data-theme lo pone ThemeService),
+   o siempre si ha elegido "dark" con el interruptor */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161f;        /* tinta azul noche */
+    --surface: #1a1f2b;
+    --text: #e7e9f0;
+    --muted: #9aa0b4;
+    --accent: #8f9bff;
+    --on-accent: #12161f;
+    --marker: #f2d74e;
+    --on-marker: #12161f;
+    --border: #2a3040;
+    --error: #ff8a80;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161f;
+  --surface: #1a1f2b;
+  --text: #e7e9f0;
+  --muted: #9aa0b4;
+  --accent: #8f9bff;
+  --on-accent: #12161f;
+  --marker: #f2d74e;
+  --on-marker: #12161f;
+  --border: #2a3040;
+  --error: #ff8a80;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+/* Con un modal abierto, la página de detrás no hace scroll */
+html:has(dialog[open]) { overflow: hidden; }
+
+body {
+  font-family: var(--font);
+  font-size: 1.0625rem;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-wrap: break-word; /* URLs largas no desbordan en móvil */
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { line-height: 1.2; text-wrap: balance; }
+p { text-wrap: pretty; }
+
+::selection { background: var(--marker); color: var(--on-marker); }
+
+a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+
+.container { max-width: var(--ancho); margin: 0 auto; padding: 0 20px; }
+
+/* Texto solo para lectores de pantalla */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* ---------- Navegación ---------- */
+/* El sticky va en el componente (host), no en el <nav> de dentro,
+   porque sticky solo funciona dentro de su elemento padre */
+app-navbar { display: block; position: sticky; top: 0; z-index: 10; }
+nav {
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+nav .container {
+  display: flex; align-items: center; gap: 20px;
+  height: var(--nav-h);
+}
+nav .logo { font-weight: 800; font-size: 1.05rem; color: var(--text); text-decoration: none; letter-spacing: -0.02em; }
+/* Los enlaces se desplazan en horizontal si no caben; idioma y tema quedan siempre visibles */
+nav ul {
+  display: flex; gap: 24px; list-style: none;
+  margin-left: auto; min-width: 0; overflow-x: auto; scrollbar-width: none;
+}
+nav ul a { color: var(--muted); font-size: 0.95rem; white-space: nowrap; text-decoration: none; }
+nav ul a:hover { color: var(--text); }
+
+/* ---------- Botones ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 20px; border-radius: 6px;
+  font: inherit; font-size: 0.95rem; font-weight: 600; line-height: 1.3;
+  color: var(--text); background: transparent;
+  border: 1.5px solid var(--text);
+  text-decoration: none; cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+.btn:hover { background: var(--text); color: var(--bg); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.primary:hover { filter: brightness(1.12); }
+.btn:disabled { opacity: 0.55; cursor: default; filter: none; }
+
+/* Botón con aspecto de enlace (sugerencias del chat) */
+.enlace {
+  font: inherit; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer;
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-align: left;
+}
+.enlace:hover { text-decoration-thickness: 2px; }
+.enlace:disabled { color: var(--muted); cursor: default; }
+
+/* ---------- Secciones: título a la izquierda, contenido a la derecha ---------- */
+main section {
+  display: grid; grid-template-columns: var(--col-titulo) minmax(0, 1fr);
+  column-gap: 48px;
+  padding: 56px 0;
+  border-top: 1px solid var(--border);
+  scroll-margin-top: var(--nav-h);
+}
+main section > h2 { grid-column: 1; font-size: 1.2rem; font-weight: 700; letter-spacing: -0.01em; }
+main section > :not(h2) { grid-column: 2; }
+main section > p { max-width: 65ch; }
+
+/* ---------- Experiencia / formación: fechas al margen ---------- */
+.item {
+  display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); column-gap: 24px;
+}
+.item + .item { margin-top: 28px; }
+.item .date { color: var(--muted); font-size: 0.95rem; font-variant-numeric: tabular-nums; padding-top: 2px; }
+.item h3 { font-size: 1.1rem; font-weight: 700; }
+.item .place { color: var(--muted); margin-bottom: 6px; }
+.item ul { padding-left: 1.1em; max-width: 60ch; }
+.item li + li { margin-top: 4px; }
+.item li::marker { color: var(--muted); }
+
+/* ---------- Habilidades: lista corrida, sin etiquetas tipo píldora ---------- */
+.skills { display: flex; flex-wrap: wrap; gap: 6px 22px; list-style: none; font-size: 1.1rem; font-weight: 500; }
+
+/* ---------- Proyectos: filas separadas por línea ---------- */
+.proyectos { list-style: none; }
+.proyecto { padding: 22px 0; border-top: 1px solid var(--border); }
+.proyecto:first-child { padding-top: 0; border-top: 0; }
+.proyecto h3 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 4px; }
+.proyecto p { max-width: 62ch; }
+.proyecto .tags { color: var(--muted); font-size: 0.95rem; margin-top: 6px; }
+
+/* ---------- Pie ---------- */
+footer { color: var(--muted); font-size: 0.9rem; padding: 28px 0 40px; border-top: 1px solid var(--border); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 760px) {
+  main section { grid-template-columns: minmax(0, 1fr); padding: 40px 0; }
+  main section > h2, main section > :not(h2) { grid-column: 1; }
+  main section > h2 { margin-bottom: 18px; }
+  .item { grid-template-columns: minmax(0, 1fr); }
+  .item .date { padding-top: 0; }
+}
+@media (max-width: 600px) {
+  body { font-size: 1rem; }
+  /* El difuminado del borde indica que el menú se puede deslizar */
+  nav ul { gap: 14px; padding-right: 16px; mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent); }
+  nav ul a { font-size: 0.875rem; }
+}
+/* En pantallas muy estrechas el logo no cabe junto a los enlaces */
+@media (max-width: 400px) {
+  nav .logo { display: none; }
+  nav .container { gap: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

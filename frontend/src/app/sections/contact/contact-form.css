@@ -1,0 +1,23 @@
+.campo { display: grid; gap: 4px; margin-bottom: 10px; }
+.campo label { font-size: 0.9rem; font-weight: 600; }
+.campo input, .campo textarea {
+  font: inherit; color: var(--text);
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 12px;
+  width: 100%;
+}
+.campo textarea { resize: vertical; min-height: 110px; }
+.campo input:focus-visible, .campo textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.campo [aria-invalid="true"] { border-color: var(--error); }
+.error { color: var(--error); font-size: 0.82rem; min-height: 1.2em; }
+
+/* Fuera de la vista pero no display:none, que algunos bots detectan y se saltan */
+.trampa { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+form .btn { margin-top: 4px; width: 100%; }
+form .btn:disabled { opacity: 0.6; cursor: default; }
+
+.aviso { border-radius: 8px; padding: 10px 14px; font-size: 0.93rem; margin-bottom: 12px; }
+.aviso.exito { background: var(--bg); border: 1px solid var(--accent); }
+.aviso.exito p { margin-bottom: 12px; }
+.aviso.fallo { color: var(--error); border: 1px solid var(--error); }

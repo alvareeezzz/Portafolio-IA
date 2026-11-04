@@ -1,0 +1,32 @@
+@let datos = i18n.datos();
+@let s = i18n.t().secciones;
+
+<app-navbar />
+<app-hero />
+
+<main class="container">
+  <section id="sobre-mi">
+    <h2>{{ s.sobreMi }}</h2>
+    <p>{{ datos.sobreMi }}</p>
+  </section>
+
+  <app-chat />
+
+  <app-timeline seccionId="experiencia" [titulo]="s.experiencia" [items]="datos.experiencia" />
+  <app-projects />
+  <app-timeline seccionId="formacion" [titulo]="s.formacion" [items]="datos.formacion" />
+
+  <section id="habilidades">
+    <h2>{{ s.habilidades }}</h2>
+    <ul class="skills">
+      @for (habilidad of datos.habilidades; track habilidad) {
+        <li>{{ habilidad }}</li>
+      }
+    </ul>
+  </section>
+
+  <app-contact />
+</main>
+
+<app-footer />
+<app-contact-modal />

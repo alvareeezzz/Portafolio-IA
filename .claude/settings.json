@@ -1,0 +1,8 @@
+{
+  "enabledPlugins": {
+    "frontend-design@anthropic-plugin-directory": true,
+    "feature-dev@anthropic-plugin-directory": true,
+    "security-guidance@anthropic-plugin-directory": true,
+    "pr-review-toolkit@anthropic-plugin-directory": true
+  }
+}

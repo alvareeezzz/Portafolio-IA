@@ -1,0 +1,55 @@
+.intro { color: var(--muted); max-width: 60ch; margin-bottom: 24px; }
+
+/* Transcripción: cada turno con el nombre de quien habla en el margen */
+.transcripcion {
+  display: grid; gap: 18px;
+  max-height: 440px; overflow-y: auto;
+  padding: 4px 4px 4px 0;
+  scrollbar-width: thin;
+}
+.turno {
+  display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); column-gap: 16px;
+  align-items: baseline;
+}
+.quien { color: var(--muted); font-size: 0.9rem; font-weight: 600; text-align: right; }
+.turno p { max-width: 62ch; white-space: pre-wrap; }
+
+/* La pregunta del visitante, subrayada con rotulador */
+mark {
+  background: var(--marker); color: var(--on-marker);
+  padding: 1px 4px; border-radius: 2px;
+  box-decoration-break: clone; -webkit-box-decoration-break: clone;
+  font-weight: 500;
+}
+.escribiendo { color: var(--muted); }
+.escribiendo::after {
+  content: '▍'; margin-left: 2px;
+  animation: cursor 1s steps(1) infinite;
+}
+@keyframes cursor { 50% { opacity: 0; } }
+
+.sugerencias {
+  list-style: none; display: flex; flex-wrap: wrap; gap: 8px 20px;
+  margin: 20px 0 0 calc(6.5rem + 16px);
+}
+
+/* Campo de pregunta: una línea de escritura, no una caja */
+.pregunta {
+  display: flex; gap: 12px; align-items: end;
+  margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);
+}
+.pregunta input {
+  flex: 1; min-width: 0;
+  font: inherit; color: var(--text);
+  background: transparent; border: 0; border-bottom: 2px solid var(--text);
+  padding: 8px 2px; border-radius: 0;
+}
+.pregunta input::placeholder { color: var(--muted); }
+.pregunta input:focus-visible { outline: none; border-bottom-color: var(--accent); }
+
+@media (max-width: 600px) {
+  .turno { grid-template-columns: minmax(0, 1fr); }
+  .quien { text-align: left; }
+  .sugerencias { margin-left: 0; }
+  .transcripcion { max-height: 380px; }
+}

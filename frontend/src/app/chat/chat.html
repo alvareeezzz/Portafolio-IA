@@ -1,0 +1,42 @@
+@let t = i18n.t().chat;
+<section id="chat">
+  <h2>{{ t.titulo }}</h2>
+
+  <div class="entrevista">
+    <p class="intro">{{ t.intro }}</p>
+
+    <!-- Angular escapa el texto por defecto: lo que escribe el visitante nunca se interpreta como HTML -->
+    <div class="transcripcion" #log role="log" aria-live="polite" [attr.aria-label]="t.conversacion">
+      <div class="turno yo">
+        <span class="quien">{{ miNombre() }}</span>
+        <p>{{ t.saludo(miNombre()) }}</p>
+      </div>
+      @for (turno of conversacion.turnos(); track $index) {
+        <div class="turno" [class.visitante]="turno.autor === 'visitante'" [class.yo]="turno.autor === 'yo'">
+          <span class="quien">{{ turno.autor === 'visitante' ? t.tu : miNombre() }}</span>
+          @if (turno.escribiendo) {
+            <p class="escribiendo">{{ t.escribiendo }}</p>
+          } @else if (turno.autor === 'visitante') {
+            <p><mark>{{ turno.texto }}</mark></p>
+          } @else {
+            <p>{{ turno.texto }}</p>
+          }
+        </div>
+      }
+    </div>
+
+    @if (conversacion.turnos().length === 0) {
+      <ul class="sugerencias">
+        @for (s of t.sugerencias; track s) {
+          <li><button type="button" class="enlace" (click)="conversacion.preguntar(s)" [disabled]="conversacion.ocupado()">{{ s }}</button></li>
+        }
+      </ul>
+    }
+
+    <form class="pregunta" (ngSubmit)="enviar()" autocomplete="off">
+      <label for="chat-input" class="visually-hidden">{{ t.etiqueta }}</label>
+      <input id="chat-input" name="pregunta" type="text" [placeholder]="t.placeholder" maxlength="200" [(ngModel)]="pregunta" required>
+      <button type="submit" class="btn primary" [disabled]="conversacion.ocupado()">{{ t.enviar }}</button>
+    </form>
+  </div>
+</section>
