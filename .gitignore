@@ -1,0 +1,12 @@
+# Frontend (Angular)
+node_modules/
+.angular/
+
+# Backend (.NET)
+backend/bin/
+backend/obj/
+# Generado por "ng build" a partir de frontend/
+backend/wwwroot/
+
+# Secretos (la clave de API va en dotnet user-secrets, fuera del proyecto)
+.env
