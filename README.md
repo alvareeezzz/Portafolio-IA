@@ -70,3 +70,14 @@ cd ../backend && dotnet publish -c Release
 ```
 
 El backend publicado sirve la web y la API desde el mismo sitio.
+
+## GitHub Pages (versión estática gratuita)
+
+Cada cambio en `main` publica la web en https://alvareeezzz.github.io/Portafolio-IA/
+(workflow en `.github/workflows/github-pages.yml`).
+
+GitHub Pages solo sirve archivos estáticos, así que esa versión no tiene la API .NET:
+el chat responde con las frases predefinidas y "Contactar" abre el correo del visitante.
+Para tener el chat con IA y el formulario, publica el backend (ver Producción).
+
+Para probar esa versión en local: `cd frontend && npx ng build --configuration production,github-pages`.
